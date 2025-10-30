@@ -1,0 +1,80 @@
+# config/tasks.yaml
+tarefa_producao_negociacao:
+  description: >
+    Simular um ciclo de produção e negociação.
+    O Agricultor deve definir seu preço de venda ideal com base em sua tabela
+    e o Empresário deve definir seu preço de compra ideal.
+    Com base nisso, eles devem negociar para chegar a um preço final.
+    O resultado final deve ser um resumo da negociação, o preço final
+    acordado, e o nível de poluição e recurso financeiro gerado por ambos.
+  expected_output: >
+    Um relatório JSON detalhando:
+    {
+      "preco_final_acordado": float,
+      "poluicao_gerada_agricultor": float,
+      "poluicao_gerada_empresario": float,
+      "recurso_gerado_total": float
+    }
+
+tarefa_fiscalizacao:
+  description: >
+    Com base no relatório de produção da tarefa anterior, você deve
+    fiscalizar os produtores. Analise os níveis de poluição gerados
+    (poluicao_gerada_agricultor, poluicao_gerada_empresario) e
+    determine se eles estão acima dos limites legais (limite fictício: 10 unidades).
+  expected_output: >
+    Um relatório de fiscalização detalhado, indicando se houve violações
+    e quais multas (fictícias) devem ser aplicadas.
+  context:
+    - 'tarefa_producao_negociacao'
+
+tarefa_relatorio_ong:
+  description: >
+    Com base nos relatórios de produção e fiscalização, prepare um
+    relatório de impacto ambiental para ser enviado aos reguladores
+    (Prefeito e Vereador). Seu relatório deve ser persuasivo e focar
+    nos riscos a longo prazo da poluição hídrica.
+  expected_output: >
+    Um documento formal (e-mail ou ofício) endereçado ao Prefeito e
+    Vereador, resumindo o estado atual da poluição e exigindo ação.
+  context:
+    - 'tarefa_producao_negociacao'
+    - 'tarefa_fiscalizacao'
+
+tarefa_politica_reguladores:
+  description: >
+    Vocês (Prefeito e Vereador) receberam os relatórios da ONG e do Fiscal
+    (disponíveis no contexto).
+    Analisem os dados de 'recurso_gerado_total' e os níveis de poluição
+    nos relatórios anteriores.
+    Com base nesses números, vocês devem negociar e definir uma política de mitigação.
+    A política deve gastar no máximo 40% do recurso financeiro gerado e deve
+    detalhar como esse dinheiro será usado (ex: subsídios para o agricultor,
+    construção de estação de tratamento).
+  expected_output: >
+    Uma "Lei Municipal" curta detalhando a política de mitigação,
+    o custo total e a redução de poluição esperada.
+  # --- REMOVEMOS O 'output_file' DAQUI ---
+  context:
+    - 'tarefa_relatorio_ong'
+
+# --- 1. ADICIONAMOS A NOVA TAREFA DE SUMÁRIO ---
+tarefa_sumario_geral:
+  description: >
+    Compilar um relatório final em markdown que resuma os resultados de
+    todas as tarefas anteriores. O relatório deve incluir:
+    1.  Um resumo da negociação entre os produtores.
+    2.  As conclusões da fiscalização.
+    3.  O alerta da ONG.
+    4.  A "Lei Municipal" final definida pelos reguladores.
+    Formate tudo de maneira clara e profissional.
+  expected_output: >
+    Um relatório final completo em formato Markdown (arquivo 'report.md'),
+    contendo o sumário de todas as etapas da simulação.
+  # --- 2. ESTA TAREFA SALVARÁ O ARQUIVO FINAL ---
+  output_file: 'report.md'
+  context:
+    - 'tarefa_producao_negociacao'
+    - 'tarefa_fiscalizacao'
+    - 'tarefa_relatorio_ong'
+    - 'tarefa_politica_reguladores'
