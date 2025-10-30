@@ -1,6 +1,4 @@
 **
-
-```markdown
 # Relatório Final da Simulação de Gestão Ambiental  
 **Data:** 30 de Outubro 2025  
 **Local:** Município de [Nome da Cidade]
@@ -83,4 +81,3 @@ A ONG recomenda a **suspensão temporária das operações** até a implementaç
 - A lei municipal prevê investimento de **R$ 24.000,00** para subsídios, capacitação e instalação de estação de tratamento, com objetivo de reduzir a poluição em **70 %**, garantindo a sustentabilidade ambiental e econômica do município.
 
 **Documento finalizado com sucesso.**  
-```
