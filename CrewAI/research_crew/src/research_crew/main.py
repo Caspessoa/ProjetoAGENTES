@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-import time  # <--- 1. IMPORTAMOS A BIBLIOTECA 'TIME'
+import time 
 
 # --- CARREGAR O .ENV ---
 env_path = Path.cwd().parent / '.env'
@@ -17,38 +17,69 @@ if os.getenv("MODEL_NAME"):
 else:
     print("[Log: AVISO! Não foi possível carregar MODEL_NAME do .env.]")
 
-# --- IMPORTAR O CREW (COM NOME ATUALIZADO) ---
+# --- IMPORTAR O CREW ---
 from research_crew.crew import SimulacaoRecursosHidricosCrew
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
+
+# --- FUNÇÃO HELPER PARA CARREGAR ARQUIVOS ---
+def carregar_arquivo_referencia(file_path: str) -> str:
+    """Lê um arquivo de referência da raiz do projeto."""
+    try:
+        caminho_completo = Path.cwd().parent / file_path
+        if not caminho_completo.exists():
+            return f"ERRO: Arquivo de referência '{file_path}' não encontrado."
+        with open(caminho_completo, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        return f"ERRO ao ler '{file_path}': {str(e)}"
 
 def run():
     """
     Executa a simulação.
     """
+    
+    # --- 1. CARREGAR OS DADOS ANTES DA SIMULAÇÃO ---
+    tabela_agricultor = carregar_arquivo_referencia("tabela_agricultor.txt")
+    tabela_empresario = carregar_arquivo_referencia("tabela_empresario.txt")
+    lei_municipal = carregar_arquivo_referencia("lei_municipal.txt")
+    pesquisa_ong = carregar_arquivo_referencia("contexto_pesquisa_web.txt") # <-- NOVO
+
+    # --- 2. INJETAR OS DADOS NOS INPUTS ---
     inputs = {
         'tema': 'Gestão de Recursos Hídricos na Bacia do Rio Piratini',
-        'ano_atual': str(datetime.now().year)
+        'ano_atual': str(datetime.now().year),
+        'conteudo_tabela_agricultor': tabela_agricultor,
+        'conteudo_tabela_empresario': tabela_empresario,
+        'conteudo_lei_municipal': lei_municipal,
+        'conteudo_pesquisa_web': pesquisa_ong # <-- NOVO
     }
     
     print("[Log: Iniciando a simulação do Crew...]")
     
-    # --- 2. REGISTRAMOS O TEMPO DE INÍCIO ---
     start_time = time.time()
+    crew_result = None # Inicializa a variável
     
     try:
-        SimulacaoRecursosHidricosCrew().crew().kickoff(inputs=inputs)
+        crew_result = SimulacaoRecursosHidricosCrew().crew().kickoff(inputs=inputs)
     except Exception as e:
-        print(f"Ocorreu um erro ao rodar o crew: {e}")
+        # --- 3. CORREÇÃO DO RECURSIONERROR ---
+        # Capturamos o erro e o imprimimos de forma simples,
+        # fora do print() que causa o crash do 'rich'.
+        print(f"\n\n[ERRO NA EXECUÇÃO DO CREW]: {str(e)}\n\n")
     
-    # --- 3. CALCULAMOS E MOSTRAMOS O TEMPO DECORRIDO ---
     end_time = time.time()
     duration = end_time - start_time
     
     print("\n\n==========================================")
     print("SIMULAÇÃO CONCLUÍDA.")
-    print(f"[Log: Tempo total de simulação: {duration:.2f} segundos]") # <--- MOSTRA O TEMPO
-    print(f"[Log: O sumário final foi salvo em 'report.md' na pasta 'src/']")
+    print(f"[Log: Tempo total de simulação: {duration:.2f} segundos]")
+    
+    if crew_result:
+        print(f"[Log: O sumário final foi salvo em 'report.md' na pasta 'src/']")
+    else:
+        print("[Log: A simulação falhou e não gerou um relatório final.]")
+        
     print("============================================")
     
 if __name__ == "__main__":
