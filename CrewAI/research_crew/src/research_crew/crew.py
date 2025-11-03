@@ -4,6 +4,9 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
 
+# --- 1. REMOVER A IMPORTAÇÃO DA FERRAMENTA ---
+# from research_crew.tools.custom_tool import search_tool
+
 @CrewBase
 class SimulacaoRecursosHidricosCrew():
     """SimulacaoRecursosHidricos crew"""
@@ -12,9 +15,9 @@ class SimulacaoRecursosHidricosCrew():
     tasks: List[Task]
     
     agents_config = 'config/agents.yaml'
-    tasks_config = 'config/tasks.yaml' # Verifique se não há erro de digitação aqui
+    tasks_config = 'config/tasks.yaml' 
 
-    # --- CARREGANDO OS 6 AGENTES ---
+    # --- AGENTES ---
     @agent
     def regulador_prefeito(self) -> Agent:
         return Agent(config=self.agents_config['regulador_prefeito'], verbose=True)
@@ -24,12 +27,20 @@ class SimulacaoRecursosHidricosCrew():
         return Agent(config=self.agents_config['regulador_vereador'], verbose=True)
 
     @agent
+    def relator_geral(self) -> Agent:
+        return Agent(config=self.agents_config['relator_geral'], verbose=True)
+
+    @agent
     def fiscalizador_fiscal(self) -> Agent:
         return Agent(config=self.agents_config['fiscalizador_fiscal'], verbose=True)
 
     @agent
     def fiscalizador_ong(self) -> Agent:
-        return Agent(config=self.agents_config['fiscalizador_ong'], verbose=True)
+        return Agent(
+            config=self.agents_config['fiscalizador_ong'],
+            # tools=[search_tool], # <-- 2. REMOVER A FERRAMENTA
+            verbose=True
+        )
 
     @agent
     def produtor_agricultor(self) -> Agent:
@@ -39,17 +50,19 @@ class SimulacaoRecursosHidricosCrew():
     def produtor_empresario(self) -> Agent:
         return Agent(config=self.agents_config['produtor_empresario'], verbose=True)
 
-    # --- 1. ADICIONAMOS O NOVO AGENTE RELATOR ---
-    @agent
-    def relator_geral(self) -> Agent:
-        return Agent(config=self.agents_config['relator_geral'], verbose=True)
-
-    # --- CARREGANDO AS TAREFAS ---
+    # --- TAREFAS ---
     @task
-    def tarefa_producao_negociacao(self) -> Task:
+    def tarefa_oferta_agricultor(self) -> Task:
         return Task(
-            config=self.tasks_config['tarefa_producao_negociacao'],
+            config=self.tasks_config['tarefa_oferta_agricultor'],
             agent=self.produtor_agricultor() 
+        )
+
+    @task
+    def tarefa_resposta_empresario(self) -> Task:
+        return Task(
+            config=self.tasks_config['tarefa_resposta_empresario'],
+            agent=self.produtor_empresario() 
         )
 
     @task
@@ -73,36 +86,20 @@ class SimulacaoRecursosHidricosCrew():
             agent=self.regulador_prefeito() 
         )
 
-    # --- 2. ADICIONAMOS A NOVA TAREFA DE SUMÁRIO ---
     @task
     def tarefa_sumario_geral(self) -> Task:
         return Task(
             config=self.tasks_config['tarefa_sumario_geral'],
-            agent=self.relator_geral() # Atribuímos ao novo agente
+            agent=self.relator_geral()
         )
 
     @crew
     def crew(self) -> Crew:
         """Creates the SimulacaoRecursosHidricos crew"""
         return Crew(
-            # --- 3. ADICIONAMOS O NOVO AGENTE À LISTA ---
-            agents=[
-                self.regulador_prefeito(),
-                self.regulador_vereador(),
-                self.fiscalizador_fiscal(),
-                self.fiscalizador_ong(),
-                self.produtor_agricultor(),
-                self.produtor_empresario(),
-                self.relator_geral() # <--- NOVO AGENTE AQUI
-            ],
-            # --- 4. ADICIONAMOS A NOVA TAREFA AO FINAL DA FILA ---
-            tasks=[
-                self.tarefa_producao_negociacao(),
-                self.tarefa_fiscalizacao(),
-                self.tarefa_relatorio_ong(),
-                self.tarefa_politica_reguladores(),
-                self.tarefa_sumario_geral() # <--- NOVA TAREFA AQUI
-            ],
+            agents=self.agents, # type: ignore[attr-defined]
+            tasks=self.tasks, # type: ignore[attr-defined]
             process=Process.sequential,
             verbose=True
+            # 3. REMOVER A 'tools=[]' DAQUI
         )

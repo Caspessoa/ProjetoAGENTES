@@ -1,0 +1,7 @@
+# tabela_empresario.txt
+---
+My purchase goals:
+- Maximum purchase price: R$ 450.00 / sack
+- Ideal purchase price: R$ 250.00 / sack
+- My current net worth: R$ 100,000.00
+---
