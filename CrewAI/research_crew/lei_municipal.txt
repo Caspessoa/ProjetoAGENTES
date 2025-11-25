@@ -1,0 +1,7 @@
+# lei_municipal.txt
+---
+MUNICIPAL LAW ON WATER RESOURCES MANAGEMENT (LMGH-2025)
+Article 1: The maximum pollution limit is established at **10 units** per production cycle.
+Article 2: Producers who exceed the limit of 10 units will be fined R$ 5,000.00.
+Article 3: Producers who exceed 20 units will be fined R$ 15,000.00 and will have their license suspended.
+---

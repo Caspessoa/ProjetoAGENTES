@@ -1,0 +1,7 @@
+# tabela_agricultor.txt
+---
+My benchmark costs:
+- Minimum selling price: R$ 300.00 / sack
+- Ideal selling price: R$ 500.00 / sack
+- My current net worth: R$ 50,000.00
+---

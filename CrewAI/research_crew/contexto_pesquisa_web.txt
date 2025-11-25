@@ -1,0 +1,7 @@
+# contexto_pesquisa_web.txt
+---
+Key Facts from Web Research:
+- Pesticide runoff contaminates rivers and groundwater.
+- Contamination affects aquatic life and can enter the human food chain.
+- River basins in Brazil have shown increasing levels of pollutants, requiring immediate regulatory action to prevent irreversible damage.
+---
