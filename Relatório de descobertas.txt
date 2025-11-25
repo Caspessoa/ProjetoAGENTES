@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Relatório de descobertas
 
 python -m pip install --upgrade pip 
@@ -29,3 +30,36 @@ Próximos passos: aprofundar os conhecimentos sobre CrewAI
     -> tentar criar documentos para que os agentes os usem como base de consulta de preços, por exemplo
 
 Próximos passos: iniciar o aprendizado com o AutoGen
+=======
+Relatório de descobertas
+
+python -m pip install --upgrade pip 
+
+Antes
+Tentei fazer a portabilidade do TinyTroupe para o gpt-oss usando Ollama de todas as formas e não consegui
+Mandei email pro Paulo Salem, que é diretor do projeto, professor na universidade de São Paulo
+
+24.09.25
+Parti para a tentativa de utilizar o AutoGen e o CrewAI com o Ollama no modelo gpt-oss
+
+A última versão do python é instável.
+Usei python v 3.12.0 e CrewAI na sua última versão
+Ambiente virtual com python -m venv .venv
+Permitir scripts no shell com Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process 
+Ativar o ambiente com .venv\Scripts\activate
+Instalar as dependências CrewAI ali com pip install "crewai[tools]"
+Instalar o langchain community com pip install langchain-community 
+Fazer update do pip com python -m pip install --upgrade pip
+
+A forma como implementava Ollama estava obsoleta, gemini resolveu e instalei o langchain ollama (pip install -U langchain-ollama)
+
+Primeiros resultados com o CrewAI concluídos xD
+
+Próximos passos: aprofundar os conhecimentos sobre CrewAI 
+    -> ler documentação novamente: lido
+    -> rodar o código teste inicial: consegui depois de muitas tentativas
+    -> ver as formas de configurar o ambiente e gerar os agentes: rodei a primeira simulação com o ambiente gorim, agora é aprofundar
+    -> tentar criar documentos para que os agentes os usem como base de consulta de preços, por exemplo
+
+Próximos passos: iniciar o aprendizado com o AutoGen
+>>>>>>> 7532fc61a0595ad6180d5b5a74b6daaaf56a8f76

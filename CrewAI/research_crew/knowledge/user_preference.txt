@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 User name is John Doe.
 User is an AI Engineer.
 User is interested in AI Agents.
 User is based in San Francisco, California.
+=======
+User name is John Doe.
+User is an AI Engineer.
+User is interested in AI Agents.
+User is based in San Francisco, California.
+>>>>>>> 7532fc61a0595ad6180d5b5a74b6daaaf56a8f76
